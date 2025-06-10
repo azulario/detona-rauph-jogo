@@ -4,42 +4,86 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/azulario/detona-rauph-jogo)
 ![GitHub forks](https://img.shields.io/github/forks/azulario/detona-rauph-jogo)
 
-Jogo divertido inspirado no filme “Detona Ralph”, onde você deve clicar no Ralph que aparece aleatoriamente nas janelas para marcar pontos.
-
----
+Jogo web inspirado no filme "Detona Ralph" desenvolvido durante o bootcamp da DIO. O objetivo é clicar no Ralph que aparece aleatoriamente nas janelas antes que ele desapareça!
 
 ## 🎮 Como Jogar
 
-Clique no Ralph quando ele aparecer. Você tem 60 segundos para fazer o máximo de pontos. A dificuldade aumenta progressivamente.
+- **Objetivo**: Clique no Ralph quando ele aparecer
+- **Tempo**: 60 segundos para fazer o máximo de pontos
+- **Dificuldade**: Velocidade aumenta progressivamente
 
----
+## 💡 Funcionalidades Extras Implementadas
 
-## 🛠 Tecnologias
+### 🚀 **Sistema de Velocidade Progressiva** (Além do projeto original)
+- Ralph aparece mais rápido conforme o tempo passa
+- Progressão suave a cada 5 segundos
+- Balanceamento testado para melhor jogabilidade
 
-- HTML5, CSS3, JavaScript ES6+
+```javascript
+// Implementação personalizada
+function updateGameSpeed() {
+    const timeElapsed = state.values.initialTime - state.values.currentTime;
+    const newVelocity = state.values.gameVelocity - (timeElapsed * state.values.velocityDecrease);
+    const finalVelocity = Math.max(newVelocity, state.values.minVelocity);
+    
+    if (timeElapsed % 5 === 0) {
+        clearInterval(state.actions.timerId);
+        state.actions.timerId = setInterval(randomSquare, finalVelocity);
+    }
+}
+```
 
----
+**Progressão**: 1000ms (início) → 500ms (final) com mudanças graduais
 
-## 🚀 Instalação e Execução
+## 🛠️ Tecnologias
+
+- **HTML5** - Estrutura
+- **CSS3** - Estilização e responsividade  
+- **JavaScript ES6+** - Lógica do jogo
+  - Manipulação DOM
+  - Timers e Intervals
+  - Audio API
+  - Event Listeners
+
+## 🚀 Como Executar
 
 ```bash
+# Clone o repositório
 git clone https://github.com/azulario/detona-rauph-jogo.git
+
+# Entre na pasta
 cd detona-rauph-jogo
-open index.html
-# ou usar servidor local
+
+# Abra no navegador ou use um servidor local
 python -m http.server 8000
+# ou
+npx live-server
+```
+
+## 📁 Estrutura
+
+```
+detona-rauph-jogo/
+├── index.html
+├── src/
+│   ├── styles/main.css
+│   ├── scripts/engine.js
+│   ├── images/
+│   └── audios/
+└── README.md
+```
+
+## 🎯 Aprendizados
+
+- Manipulação avançada do DOM
+- Controle de timers e eventos
+- Organização de código com state pattern
+- Implementação de funcionalidades além do escopo original
+
+## 👨‍💻 Desenvolvedor
+
+**Azulario** - [@azulario](https://github.com/azulario)
 
 ---
 
-## 👨‍💻 Autor
-
-Azulario – [GitHub](https://github.com/azulario)
-
----
-
-⭐ Gostou do projeto? Deixe uma estrela no repositório para apoiar! ⭐
-
----
-
-Se quiser explorar mais funcionalidades e melhorias, fique à vontade para conferir a documentação completa no repositório.
-
+⭐ Projeto desenvolvido no bootcamp da **Digital Innovation One (DIO)** ⭐
