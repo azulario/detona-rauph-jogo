@@ -20,20 +20,6 @@ Clique no Ralph quando ele aparecer. Você tem 60 segundos para fazer o máximo 
 
 ---
 
-## 📁 Estrutura do Projeto
-
-detona-rauph-jogo/
-├── index.html
-├── src/
-│ ├── styles/
-│ ├── scripts/
-│ ├── images/
-│ └── audios/
-└── README.md
-
-
----
-
 ## 🚀 Instalação e Execução
 
 ```bash
