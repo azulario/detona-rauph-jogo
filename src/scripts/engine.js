@@ -4,13 +4,14 @@ const state = {
         enemy: document.querySelector('.enemy'),
         timeLeft: document.querySelector('#time-left'),
         score: document.querySelector('#score'),
+        bgMusic: new Audio('/src/audios/music.mp3'), // Background music
     },
     values: {
         gameVelocity: 1000, // milesegundos
         hitPosition: 0,
         result: 0,
         currentTime: 60, // segundos
-        minVelocity: 350, // milisegundos
+        minVelocity: 300, // milisegundos
         velocityDecrease: 10, // milisegundos
         initialTime: 60, // segundos
     },
@@ -21,6 +22,12 @@ const state = {
     }
 };
 
+function playGameOverSound() {
+    let gameOverAudio = new Audio('/src/audios/gameover.mp3');
+    gameOverAudio.volume = 0.8; // Set volume to 80%
+    gameOverAudio.play().catch(e => console.log("Error playing game over sound:", error));
+}
+
 function countDown() {
     state.values.currentTime--;
     state.view.timeLeft.textContent = state.values.currentTime;
@@ -30,8 +37,12 @@ function countDown() {
     if (state.values.currentTime <= 0) {
         clearInterval(state.actions.countDownTimerId);
         clearInterval(state.actions.timerId);
-        alert("Game Over! Seu Score é: " + state.values.result);
+        state.view.bgMusic.pause();
+        playGameOverSound();
+        setTimeout(() => {
+        alert("Game Over! Seu Score é: " + state.values.result);}, 100);
     }
+    
 }
 
 function updateGameSpeed() {
@@ -52,11 +63,17 @@ function updateGameSpeed() {
     
 }
 
+function setupBackgroundMusic() {
+    state.view.bgMusic.volume = 0.5; // Set volume to 10%
+    state.view.bgMusic.loop = true; // Loop the music
+}
+
 function playSound() {
     let audio = new Audio('./src/audios/hit.m4a');
-    audio.volume = 0.1; // Set volume to 10%
+    audio.volume = 0.3; // Set volume to 10%
     audio.play();
 }
+
 
 function randomSquare() {
     state.view.squares.forEach((square) => {square.classList.remove("enemy")});
@@ -81,6 +98,8 @@ function addListenerHitbox() {
 }
 
 function init() {
+    setupBackgroundMusic();
+    state.view.bgMusic.play().catch(e => console.log("Audio play failed:", e));
     state.actions.timerId = setInterval(randomSquare, state.values.gameVelocity);
     addListenerHitbox();
 }
