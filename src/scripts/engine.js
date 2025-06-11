@@ -22,10 +22,52 @@ const state = {
     }
 };
 
+function setupBackgroundMusic() {
+    state.view.bgMusic.volume = 0.5; // Set volume to 10%
+    state.view.bgMusic.loop = true; // Loop the music
+}
+
+function playSound() {
+    let audio = new Audio('./src/audios/hit.m4a');
+    audio.volume = 0.3; // Set volume to 10%
+    audio.play();
+}
+
 function playGameOverSound() {
     let gameOverAudio = new Audio('/src/audios/gameover.mp3');
-    gameOverAudio.volume = 0.8; // Set volume to 80%
+    gameOverAudio.volume = 0.8; // Set volume to 50%
     gameOverAudio.play().catch(e => console.log("Error playing game over sound:", error));
+}
+
+function playEndingMusic() {
+    let endingMusic = new Audio('/src/audios/ending.mp3');
+    endingMusic.volume = 0.5; // volume mais suave
+    endingMusic.play();
+}
+
+function restartGame() {
+    // Reseta o estado do jogo //
+    state.values.result = 0;
+    state.values.currentTime = state.values.initialTime;
+    state.values.gameVelocity = 1000;
+
+    // UI //
+    state.view.score.textContent = 0;
+    state.view.timeLeft.textContent = state.values.initialTime;
+
+    // Reseta musica de fundo //
+    state.view.bgMusic.currentTime = 0;
+    state.view.bgMusic.play();
+
+    // Reseta o temporizador //
+    clearInterval(state.actions.timerId);
+    clearInterval(state.actions.countDownTimerId);
+
+    // Novo temporizador //
+    state.actions.timerId = setInterval(randomSquare, state.values.gameVelocity);
+    state.actions.countDownTimerId = setInterval(countDown, 1000); // 1 segundo
+
+
 }
 
 function countDown() {
@@ -39,8 +81,18 @@ function countDown() {
         clearInterval(state.actions.timerId);
         state.view.bgMusic.pause();
         playGameOverSound();
+    
         setTimeout(() => {
-        alert("Game Over! Seu Score é: " + state.values.result);}, 100);
+            if (confirm("Game Over! Seu Score é: " + state.values.result + "\nJogar novamente?")) {
+                restartGame();
+            } else {
+                playEndingMusic(); // toca a musiquinha de encerramento
+        
+                setTimeout(() => {
+                    alert("Obrigado por jogar! 😊");
+                }, 800); // Dá um mini delay pro som começar antes da janela
+            }
+        }, 100);
     }
     
 }
@@ -62,18 +114,6 @@ function updateGameSpeed() {
     }
     
 }
-
-function setupBackgroundMusic() {
-    state.view.bgMusic.volume = 0.5; // Set volume to 10%
-    state.view.bgMusic.loop = true; // Loop the music
-}
-
-function playSound() {
-    let audio = new Audio('./src/audios/hit.m4a');
-    audio.volume = 0.3; // Set volume to 10%
-    audio.play();
-}
-
 
 function randomSquare() {
     state.view.squares.forEach((square) => {square.classList.remove("enemy")});
