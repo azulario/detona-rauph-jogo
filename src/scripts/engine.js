@@ -4,7 +4,7 @@ const state = {
         enemy: document.querySelector('.enemy'),
         timeLeft: document.querySelector('#time-left'),
         score: document.querySelector('#score'),
-        bgMusic: new Audio('/src/audios/music.mp3'), // Background music
+        bgMusic: new Audio('/src/audios/music.m4a'), // Background music
     },
     values: {
         gameVelocity: 1000, // milesegundos
@@ -34,13 +34,13 @@ function playSound() {
 }
 
 function playGameOverSound() {
-    let gameOverAudio = new Audio('/src/audios/gameover.mp3');
+    let gameOverAudio = new Audio('/src/audios/gameover.m4a');
     gameOverAudio.volume = 0.8; // Set volume to 50%
     gameOverAudio.play().catch(e => console.log("Error playing game over sound:", error));
 }
 
 function playEndingMusic() {
-    let endingMusic = new Audio('/src/audios/ending.mp3');
+    let endingMusic = new Audio('/src/audios/ending.m4a');
     endingMusic.volume = 0.5; // volume mais suave
     endingMusic.play();
 }
