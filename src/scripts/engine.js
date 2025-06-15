@@ -22,14 +22,16 @@ const state = {
     }
 };
 
+
 function setupBackgroundMusic() {
-    state.view.bgMusic.volume = 0.5; // Set volume to 10%
+    state.view.bgMusic.volume = 0.5; 
     state.view.bgMusic.loop = true; // Loop the music
-}
+    
+    }
 
 function playSound() {
     let audio = new Audio('./src/audios/hit.m4a');
-    audio.volume = 0.3; // Set volume to 10%
+    audio.volume = 0.3; 
     audio.play();
 }
 
@@ -45,7 +47,7 @@ function playEndingMusic() {
     endingMusic.play();
 }
 
-function restartGame() {
+function startGame() {
     // Reseta o estado do jogo //
     state.values.result = 0;
     state.values.currentTime = state.values.initialTime;
@@ -70,6 +72,15 @@ function restartGame() {
 
 }
 
+function confirmStart() {
+    const start = confirm("Pronto para começar o jogo?");
+    if (start) {
+        startGame(); // chama a função principal de inicialização
+    } else {
+        alert("Quando quiser jogar, é só atualizar a página. 🎮");
+    }
+}
+
 function countDown() {
     state.values.currentTime--;
     state.view.timeLeft.textContent = state.values.currentTime;
@@ -84,7 +95,7 @@ function countDown() {
     
         setTimeout(() => {
             if (confirm("Game Over! Seu Score é: " + state.values.result + "\nJogar novamente?")) {
-                restartGame();
+                startGame();
             } else {
                 playEndingMusic(); // toca a musiquinha de encerramento
         
@@ -137,11 +148,13 @@ function addListenerHitbox() {
     });
 }
 
+
+
 function init() {
+   
     setupBackgroundMusic();
-    state.view.bgMusic.play().catch(e => console.log("Audio play failed:", e));
-    state.actions.timerId = setInterval(randomSquare, state.values.gameVelocity);
     addListenerHitbox();
+    confirmStart();
 }
 
 init ();
