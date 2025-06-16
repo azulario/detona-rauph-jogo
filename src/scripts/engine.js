@@ -14,6 +14,8 @@ const state = {
         minVelocity: 300, // milisegundos
         velocityDecrease: 10, // milisegundos
         initialTime: 60, // segundos
+        lives: 4,
+        maxLives: 4,
     },
 
     actions: {
@@ -35,6 +37,12 @@ function playSound() {
     audio.play();
 }
 
+function playSoundOnMiss() {
+    let missAudio = new Audio('./src/audios/miss.wav');
+    missAudio.volume = 0.4; 
+    missAudio.play();
+}
+
 function playGameOverSound() {
     let gameOverAudio = new Audio('/src/audios/gameover.m4a');
     gameOverAudio.volume = 0.8; // Set volume to 50%
@@ -52,7 +60,9 @@ function startGame() {
     state.values.result = 0;
     state.values.currentTime = state.values.initialTime;
     state.values.gameVelocity = 1000;
-
+    state.values.lives = state.values.maxLives;
+    updateLivesDisplay();
+    
     // UI //
     state.view.score.textContent = 0;
     state.view.timeLeft.textContent = state.values.initialTime;
@@ -88,22 +98,8 @@ function countDown() {
     updateGameSpeed();
 
     if (state.values.currentTime <= 0) {
-        clearInterval(state.actions.countDownTimerId);
-        clearInterval(state.actions.timerId);
-        state.view.bgMusic.pause();
-        playGameOverSound();
-    
-        setTimeout(() => {
-            if (confirm("Game Over! Seu Score é: " + state.values.result + "\nJogar novamente?")) {
-                startGame();
-            } else {
-                playEndingMusic(); // toca a musiquinha de encerramento
-        
-                setTimeout(() => {
-                    alert("Obrigado por jogar! 😊");
-                }, 800); // Dá um mini delay pro som começar antes da janela
-            }
-        }, 100);
+        gameOver();
+     
     }
     
 }
@@ -135,6 +131,11 @@ function randomSquare() {
     state.values.hitPosition = randomSquare.id;
 }
 
+function updateLivesDisplay() {
+    const livesElement = document.querySelector('#lives');
+    livesElement.textContent = `${state.values.lives}x`;
+}
+
 function addListenerHitbox() {
     state.view.squares.forEach((square) => {
         square.addEventListener('mousedown', () => {
@@ -143,12 +144,42 @@ function addListenerHitbox() {
                 state.view.score.textContent = state.values.result;
                 state.values.hitPosition = null;
                 playSound()
+            } else {
+                state.values.lives--;
+                playSoundOnMiss();
+                updateLivesDisplay();
+                
+
+                if (state.values.lives <= 0) {
+                    gameOver();
+                
+                }
             }
         });
     });
 }
 
 
+
+function gameOver() {
+    clearInterval(state.actions.countDownTimerId);
+    clearInterval(state.actions.timerId);
+    state.view.bgMusic.pause();
+    playGameOverSound();
+
+    setTimeout(() => {
+        if (confirm("Game Over! Seu Score é: " + state.values.result + "\nJogar novamente?")) {
+            startGame();
+        } else {
+            playEndingMusic(); // toca a musiquinha de encerramento
+    
+            setTimeout(() => {
+                alert("Obrigado por jogar! Quando quiser jogar, é só atualizar a página. 🎮");
+            }, 800); // Dá um mini delay pro som começar antes da janela
+        }
+    }, 100);
+    // Outras ações de fim de jogo, se quiser
+}
 
 function init() {
    
